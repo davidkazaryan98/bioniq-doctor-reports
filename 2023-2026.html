@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Аналитика рекомендаций врачей (2023–2026)</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1a1d23;--muted:#5c6578;--border:#e2e6ee;--accent:#2563eb}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 48px}
+header{background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;padding:40px 20px;margin-bottom:24px}
+header h1{margin:0 0 8px;font-size:1.6rem}header p{margin:0;opacity:.9}
+.badge{display:inline-block;background:#fbbf24;color:#1a1d23;font-weight:700;padding:4px 10px;border-radius:6px;font-size:.85rem;margin-right:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.stat .v{font-size:1.5rem;font-weight:700;color:var(--accent)}.stat .l{font-size:.8rem;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.card h2{margin:0 0 4px;font-size:1.1rem}.sub{color:var(--muted);font-size:.85rem;margin:0 0 14px}
+.bar-row{margin-bottom:10px}.bar-label{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px}
+.bar-track{height:8px;background:var(--border);border-radius:4px}.bar-fill{height:100%;background:var(--accent);border-radius:4px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left}
+th{color:var(--muted);font-size:.75rem;text-transform:uppercase}td.num{text-align:right;font-weight:600}
+.tag{font-size:.7rem;background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:999px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.insights{background:#f0f9ff;border-color:#bae6fd}footer{color:var(--muted);font-size:.8rem;margin-top:32px;padding-top:16px;border-top:1px solid var(--border)}
+.nav{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;margin-bottom:16px}
+.nav a{color:var(--accent);margin-right:16px;font-size:.9rem;text-decoration:none;font-weight:500}
+</style>
+</head>
+<body>
+<div class="nav wrap" style="max-width:100%;padding-top:12px;padding-bottom:12px">
+  <a href="index.html">← Все отчёты</a>
+  <a href="all-years.html">Все годы</a>
+  <a href="2023-2026.html">2023–2026</a>
+</div>
+<header><div class="wrap" style="padding:0">
+  <span class="badge">2023 — 2026</span>
+  <h1>Аналитика рекомендаций врачей (2023–2026)</h1>
+  <p>Только 2023–2026 годы, без данных 2022 года.</p>
+  <p style="margin-top:12px;font-size:.9rem;opacity:.85">
+    2023-01-02 — 2026-04-29 ·
+    9,292 строк · 5,117 консультаций
+  </p>
+</div></header>
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><div class="v">9,292</div><div class="l">Строк рекомендаций</div></div>
+    <div class="stat"><div class="v">5,117</div><div class="l">Консультаций</div></div>
+    <div class="stat"><div class="v">1375</div><div class="l">Средняя длина (симв.)</div></div>
+    <div class="stat"><div class="v">426</div><div class="l">Медиана длины</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h2>По годам</h2><p class="sub">Строк рекомендаций</p><div class="bar-row"><div class="bar-label"><span>2023</span><span><strong>3,024</strong> (32.5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>2024</span><span><strong>3,742</strong> (40.3%)</span></div><div class="bar-track"><div class="bar-fill" style="width:123.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>2025</span><span><strong>1,902</strong> (20.5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:62.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>2026</span><span><strong>624</strong> (6.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:20.6%"></div></div></div></div>
+    <div class="card"><h2>Топ тарифов</h2><div class="bar-row"><div class="bar-label"><span>PRO Пакет 3m</span><span><strong>1,568</strong> (16.9%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO Чекап</span><span><strong>1,488</strong> (16.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:94.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO Чекап Tinkoff</span><span><strong>931</strong> (10.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:59.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>LIFE Test (RU)</span><span><strong>873</strong> (9.4%)</span></div><div class="bar-track"><div class="bar-fill" style="width:55.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>LIFE (RU)</span><span><strong>729</strong> (7.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:46.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO Пакет 3m Только витамины</span><span><strong>586</strong> (6.3%)</span></div><div class="bar-track"><div class="bar-fill" style="width:37.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO PLUS Пакет 3m</span><span><strong>529</strong> (5.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:33.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO PLUS Чекап</span><span><strong>467</strong> (5.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:29.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>LIFE (UAE)</span><span><strong>345</strong> (3.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:22.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>PRO PLUS Пакет 6m</span><span><strong>256</strong> (2.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:16.3%"></div></div></div></div>
+  </div>
+
+  <div class="card"><h2>Типы рекомендаций</h2><p class="sub">Мульти-метки — сумма больше числа строк</p>
+  <div class="bar-row"><div class="bar-label"><span>БАД / витамины / добавки</span><span><strong>5,014</strong> (54.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Диета / продукты питания</span><span><strong>4,840</strong> (52.1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:96.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Физическая активность</span><span><strong>4,258</strong> (45.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:84.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>КБЖУ / калорийность</span><span><strong>3,787</strong> (40.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:75.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Анализы / обследования</span><span><strong>3,488</strong> (37.5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:69.6%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Медикаменты / препараты</span><span><strong>2,635</strong> (28.4%)</span></div><div class="bar-track"><div class="bar-fill" style="width:52.6%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Консультация врача / специалиста</span><span><strong>1,627</strong> (17.5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:32.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Инструментальная диагностика</span><span><strong>1,496</strong> (16.1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:29.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Вода / гидратация</span><span><strong>1,474</strong> (15.9%)</span></div><div class="bar-track"><div class="bar-fill" style="width:29.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Ссылки / магазины</span><span><strong>1,276</strong> (13.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:25.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Собственный продукт Bioniq</span><span><strong>924</strong> (9.9%)</span></div><div class="bar-track"><div class="bar-fill" style="width:18.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Курение / алкоголь</span><span><strong>802</strong> (8.6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:16.0%"></div></div></div></div>
+
+  <div class="grid2">
+    <div class="card"><h2>Бренды и продукты</h2>
+    <table><thead><tr><th>Название</th><th>Тип</th><th>Упоминаний</th></tr></thead>
+    <tbody><tr><td>Omega-3 (generic)</td><td><span class="tag">вещество</span></td><td class="num">2,438</td></tr>
+<tr><td>Psyllium / Псиллиум</td><td><span class="tag">вещество</span></td><td class="num">1,519</td></tr>
+<tr><td>Bioniq</td><td><span class="tag">свой</span></td><td class="num">924</td></tr>
+<tr><td>Magnesium (generic)</td><td><span class="tag">вещество</span></td><td class="num">678</td></tr>
+<tr><td>Vitamin D (generic)</td><td><span class="tag">вещество</span></td><td class="num">578</td></tr>
+<tr><td>Iron / Железо supplements</td><td><span class="tag">бренд</span></td><td class="num">395</td></tr>
+<tr><td>Zinc (generic)</td><td><span class="tag">вещество</span></td><td class="num">267</td></tr>
+<tr><td>Solgar</td><td><span class="tag">бренд</span></td><td class="num">236</td></tr>
+<tr><td>Donat Mg</td><td><span class="tag">бренд</span></td><td class="num">178</td></tr>
+<tr><td>Creatine</td><td><span class="tag">бренд</span></td><td class="num">119</td></tr>
+<tr><td>Evalar / Эвалар</td><td><span class="tag">бренд</span></td><td class="num">116</td></tr>
+<tr><td>Jarrow</td><td><span class="tag">бренд</span></td><td class="num">91</td></tr>
+<tr><td>Life Extension</td><td><span class="tag">бренд</span></td><td class="num">77</td></tr>
+<tr><td>CoQ10 / Коэнзим Q10</td><td><span class="tag">бренд</span></td><td class="num">73</td></tr>
+<tr><td>Berberine / Берберин</td><td><span class="tag">бренд</span></td><td class="num">72</td></tr>
+<tr><td>USmall</td><td><span class="tag">канал</span></td><td class="num">66</td></tr>
+<tr><td>Урисан</td><td><span class="tag">бренд</span></td><td class="num">55</td></tr>
+<tr><td>Collagen</td><td><span class="tag">бренд</span></td><td class="num">44</td></tr>
+<tr><td>Prenatal vitamins (generic)</td><td><span class="tag">вещество</span></td><td class="num">43</td></tr>
+<tr><td>Levothyroxine / L-тироксин</td><td><span class="tag">бренд</span></td><td class="num">43</td></tr>
+<tr><td>Probiotics (generic)</td><td><span class="tag">вещество</span></td><td class="num">24</td></tr>
+<tr><td>Statins mention</td><td><span class="tag">бренд</span></td><td class="num">22</td></tr>
+<tr><td>Ozon</td><td><span class="tag">канал</span></td><td class="num">21</td></tr>
+<tr><td>Melatonin</td><td><span class="tag">бренд</span></td><td class="num">17</td></tr>
+<tr><td>Ozempic / семаглутид</td><td><span class="tag">бренд</span></td><td class="num">16</td></tr></tbody></table></div>
+    <div class="card"><h2>Направления к врачам</h2>
+    <table><thead><tr><th>Специальность</th><th>Упоминаний</th></tr></thead>
+    <tbody><tr><td>Терапевт</td><td class="num">878</td></tr>
+<tr><td>Эндокринолог</td><td class="num">678</td></tr>
+<tr><td>Гастроэнтеролог</td><td class="num">514</td></tr>
+<tr><td>Кардиолог</td><td class="num">246</td></tr>
+<tr><td>Гинеколог</td><td class="num">138</td></tr>
+<tr><td>Аллерголог</td><td class="num">77</td></tr>
+<tr><td>Ревматолог</td><td class="num">35</td></tr>
+<tr><td>Уролог</td><td class="num">35</td></tr>
+<tr><td>Невролог</td><td class="num">23</td></tr>
+<tr><td>ЛОР / отоларинголог</td><td class="num">17</td></tr>
+<tr><td>Нутрициолог</td><td class="num">14</td></tr>
+<tr><td>Офтальмолог</td><td class="num">12</td></tr>
+<tr><td>Хирург</td><td class="num">11</td></tr>
+<tr><td>Стоматолог</td><td class="num">11</td></tr>
+<tr><td>Ортопед</td><td class="num">8</td></tr></tbody></table></div>
+  </div>
+
+  <div class="card"><h2>Анализы и диагностика</h2>
+  <div class="bar-row"><div class="bar-label"><span>Липидный профиль</span><span><strong>2,832</strong> (30.5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Печёночные пробы</span><span><strong>2,356</strong> (25.4%)</span></div><div class="bar-track"><div class="bar-fill" style="width:83.2%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Цинк / медь / микроэлементы</span><span><strong>1,342</strong> (14.4%)</span></div><div class="bar-track"><div class="bar-fill" style="width:47.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Фолат</span><span><strong>1,306</strong> (14.1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:46.1%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>УЗИ</span><span><strong>1,273</strong> (13.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:45.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Ферритин</span><span><strong>617</strong> (6.6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:21.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Витамин B12</span><span><strong>572</strong> (6.2%)</span></div><div class="bar-track"><div class="bar-fill" style="width:20.2%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Мочевая кислота</span><span><strong>483</strong> (5.2%)</span></div><div class="bar-track"><div class="bar-fill" style="width:17.1%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>ЭКГ</span><span><strong>450</strong> (4.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:15.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Гомоцистеин</span><span><strong>376</strong> (4.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:13.3%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Глюкоза / HbA1c</span><span><strong>348</strong> (3.7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:12.3%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>ТТГ / щитовидка</span><span><strong>258</strong> (2.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:9.1%"></div></div></div></div>
+
+  <div class="grid2">
+    <div class="card"><h2>Действующие вещества</h2>
+    <table><tbody><tr><td>таурин</td><td class="num">281</td></tr>
+<tr><td>цитрат</td><td class="num">188</td></tr>
+<tr><td>глицин</td><td class="num">182</td></tr>
+<tr><td>хелат</td><td class="num">147</td></tr>
+<tr><td>глицинат</td><td class="num">123</td></tr>
+<tr><td>лецитин</td><td class="num">115</td></tr>
+<tr><td>берберин</td><td class="num">72</td></tr>
+<tr><td>куркумин</td><td class="num">70</td></tr>
+<tr><td>пиколинат</td><td class="num">65</td></tr>
+<tr><td>кверцетин</td><td class="num">46</td></tr>
+<tr><td>коллаген</td><td class="num">43</td></tr>
+<tr><td>ресвератрол</td><td class="num">37</td></tr>
+<tr><td>теанин</td><td class="num">32</td></tr>
+<tr><td>хондроитин</td><td class="num">17</td></tr>
+<tr><td>мелатонин</td><td class="num">17</td></tr></tbody></table></div>
+    <div class="card"><h2>Ссылки / домены</h2>
+    <table><tbody><tr><td>www.hsph.harvard.edu</td><td class="num">1,126</td></tr>
+<tr><td>usmall.ru</td><td class="num">150</td></tr>
+<tr><td>nutritionsource.hsph.harvard.edu</td><td class="num">36</td></tr>
+<tr><td>ozon.ru</td><td class="num">17</td></tr>
+<tr><td>www.ozon.ru</td><td class="num">16</td></tr>
+<tr><td>iherbgroup.ru</td><td class="num">15</td></tr>
+<tr><td>kz.iherb.com</td><td class="num">7</td></tr>
+<tr><td>exponenta.store</td><td class="num">4</td></tr>
+<tr><td>bioniq.ru</td><td class="num">3</td></tr>
+<tr><td>freestylediabetes.ru</td><td class="num">3</td></tr>
+<tr><td>www.wildberries.ru</td><td class="num">3</td></tr>
+<tr><td>health-code.ru</td><td class="num">3</td></tr></tbody></table></div>
+  </div>
+
+  <div class="card insights"><h2>Выводы</h2>
+  <ul>
+    <li>Ядро: диета (4,840), БАД (5,014).</li>
+    <li>Bioniq — 924 упоминаний; Solgar — 236; Smart Life — 6.</li>
+    <li>Инвитро / Гемотест в текстах не названы — только «сдать анализ».</li>
+  </ul></div>
+
+  <footer>Источник: Result_22.xlsx · Период: 2023 — 2026 · Автоматическая разметка по ключевым словам.</footer>
+</div>
+</body>
+</html>
