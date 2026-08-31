@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Стол инструментов — дизайн и AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #141210;
+      --ink: #f4efe6;
+      --muted: #b8aea0;
+      --line: #3a342c;
+      --panel: #1c1916;
+      --accent: #3f9a8c;
+      --accent-ink: #041512;
+      --chip: #2a2621;
+      --focus: #e8c56a;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); }
+    body {
+      font-family: Literata, Georgia, serif;
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: #3f9a8c; color: #041512; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+    .grain {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 22px 80px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    h1 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      margin: 0 0 12px;
+      max-width: 14ch;
+    }
+    .lede {
+      max-width: 62ch;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .search {
+      flex: 1 1 240px;
+      min-width: 200px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 12px 16px;
+    }
+    .search::placeholder { color: #8c8276; }
+    .chip {
+      cursor: pointer;
+      background: var(--chip);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .chip[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+
+    .board { margin-top: 8px; }
+    .group { padding: 36px 0 8px; }
+    .group h2 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 18px;
+    }
+
+    .tool {
+      display: grid;
+      grid-template-columns: minmax(180px, 240px) 1fr auto;
+      gap: 18px 28px;
+      align-items: start;
+      padding: 22px 0;
+      border-top: 1px solid var(--line);
+      text-decoration: none;
+      color: inherit;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+    .tool:hover { background: color-mix(in srgb, var(--panel) 70%, transparent); }
+    .tool:last-child { border-bottom: 1px solid var(--line); }
+    .name {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 4px;
+    }
+    .host {
+      font-size: 0.82rem;
+      color: var(--muted);
+      word-break: break-all;
+    }
+    .desc { margin: 0; color: var(--ink); max-width: 68ch; }
+    .go {
+      align-self: center;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      white-space: nowrap;
+    }
+    .tool:hover .go {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+
+    .empty { display: none; padding: 40px 0; color: var(--muted); }
+    body.is-empty .empty { display: block; }
+    body.is-empty .group { display: none !important; }
+
+    footer {
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 800px) {
+      .tool { grid-template-columns: 1fr; gap: 8px; }
+      .go { justify-self: start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tool, .tool:hover .go { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    THESIS: A working studio board of shared tools, not a marketing grid of identical cards.
+    OWN-WORLD: Warm dark cork-studio, Bricolage + Literata, copper-teal accent, row-based tools.
+    STORY: Colleague opens one link, finds the right service, clicks out.
+    FIRST VIEWPORT: Title + search/filters, then grouped rows.
+    FORM: Operate/Read directory. FINISH: public GitHub Pages URL.
+  -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="shell">
+    <header>
+      <div>
+        <h1>Стол инструментов</h1>
+        <p class="lede">Шестнадцать сервисов для дизайна, референсов, анимации и работы с AI-агентами. Откройте нужный, прочитайте зачем он, перейдите по ссылке. Страницу можно держать в закладках и слать коллегам.</p>
+      </div>
+      <div class="controls">
+        <input class="search" id="q" type="search" placeholder="Поиск по названию или задаче" aria-label="Поиск" />
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">Все</button>
+        <button class="chip" type="button" data-filter="generate" aria-pressed="false">Генерация</button>
+        <button class="chip" type="button" data-filter="ref" aria-pressed="false">Референсы</button>
+        <button class="chip" type="button" data-filter="motion" aria-pressed="false">Эффекты</button>
+        <button class="chip" type="button" data-filter="agent" aria-pressed="false">AI UI</button>
+      </div>
+    </header>
+
+    <main class="board">
+      <section class="group" data-cat="generate">
+        <h2>Собрать страницу или систему</h2>
+        <a class="tool" href="https://www.aura.build/" target="_blank" rel="noopener noreferrer" data-name="aura ai landing html figma">
+          <div>
+            <p class="name">Aura</p>
+            <p class="host">aura.build</p>
+          </div>
+          <p class="desc">AI-билдер лендингов и сайтов: из промпта или скриншота собирает готовую вёрстку. Отдаёт обычный HTML, Tailwind и JS, можно выгрузить в Figma и хостить где угодно — без закрытого рантайма Webflow.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://neuform.ai/" target="_blank" rel="noopener noreferrer" data-name="neuform design.md html remix templates meng to">
+          <div>
+            <p class="name">Neuform</p>
+            <p class="host">neuform.ai</p>
+          </div>
+          <p class="desc">Библиотека живых HTML-шаблонов и генератор страниц под агентов. У каждого дизайна есть DESIGN.md — файл с токенами и правилами, который можно скормить Cursor или Claude и продолжить работу уже в коде.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://motionsites.ai/" target="_blank" rel="noopener noreferrer" data-name="motionsites prompts landing 3d animation">
+          <div>
+            <p class="name">Motionsites</p>
+            <p class="host">motionsites.ai</p>
+          </div>
+          <p class="desc">Каталог готовых промптов для эффектных лендингов: 3D, агентства, SaaS, hero-секции. Копируете промпт в свой AI-инструмент и быстро получаете анимированную страницу, а не начинаете с пустого чата.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://getdesign.md/cursor/design-md" target="_blank" rel="noopener noreferrer" data-name="getdesign.md cursor design system markdown">
+          <div>
+            <p class="name">Design.md</p>
+            <p class="host">getdesign.md</p>
+          </div>
+          <p class="desc">Готовые разборы чужих дизайн-систем в формате DESIGN.md. Ставите пакет в проект и просите агента опираться на файл — удобно, когда нужно попасть в эстетику Cursor, продукта или тёмного developer-UI, не описывая всё руками.</p>
+          <span class="go">Открыть</span>
+        </a>
+      </section>
+
+      <section class="group" data-cat="ref">
+        <h2>Смотреть, как делают другие</h2>
+        <a class="tool" href="https://dribbble.com/" target="_blank" rel="noopener noreferrer" data-name="dribbble shots inspiration visual">
+          <div>
+            <p class="name">Dribbble</p>
+            <p class="host">dribbble.com</p>
+          </div>
+          <p class="desc">Главная витрина визуальных концептов: лендинги, иконки, брендинг, UI-шоты. Ищите настроение, композицию и типографику. Это не готовые продуктовые флоу, а направление вкуса и референс для art direction.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://mobbin.com/" target="_blank" rel="noopener noreferrer" data-name="mobbin screens flows apps ios web patterns figma">
+          <div>
+            <p class="name">Mobbin</p>
+            <p class="host">mobbin.com</p>
+          </div>
+          <p class="desc">Библиотека реальных экранов и пользовательских сценариев из сотен приложений. Смотрите, как устроены онбординг, оплата, настройки, и копируйте флоу в Figma. Это практика продукта, а не красивые макеты «для шота».</p>
+          <span class="go">Открыть</span>
+        </a>
+      </section>
+
+      <section class="group" data-cat="motion">
+        <h2>Компоненты, иконки, motion</h2>
+        <a class="tool" href="https://icons0.dev/" target="_blank" rel="noopener noreferrer" data-name="icons0 icon search collections svg agent">
+          <div>
+            <p class="name">Icons0</p>
+            <p class="host">icons0.dev</p>
+          </div>
+          <p class="desc">Быстрый поиск по сотням иконочных коллекций: Lucide, Carbon, Tabler и десятки других. Удобно и человеку, и агенту — находите нужный стиль, лицензию и набор, не прыгая по GitHub-репозиториям.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://canvasui.dev/" target="_blank" rel="noopener noreferrer" data-name="canvas ui webgl html-in-canvas shadcn">
+          <div>
+            <p class="name">Canvas UI</p>
+            <p class="host">canvasui.dev</p>
+          </div>
+          <p class="desc">Open-source библиотека WebGL и HTML-in-canvas эффектов: liquid, glass, particle reveal. Ставится через shadcn CLI в React, Vue, Svelte или чистый TypeScript. Для лендингов, где нужен «wow», а не ещё один градиентный блок.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://www.originkit.dev/" target="_blank" rel="noopener noreferrer" data-name="originkit animated components react framer mcp">
+          <div>
+            <p class="name">Originkit</p>
+            <p class="host">originkit.dev</p>
+          </div>
+          <p class="desc">Большая бесплатная библиотека анимированных компонентов: неоновые рамки, частицы, текстовые морфы, галереи. Превью, копирование в React/Framer или подключение через MCP, чтобы агент сам подтянул нужный эффект.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://transitions.dev/" target="_blank" rel="noopener noreferrer" data-name="transitions.dev ui animation agents jakub">
+          <div>
+            <p class="name">Transitions.dev</p>
+            <p class="host">transitions.dev</p>
+          </div>
+          <p class="desc">Каталог микроанимаций интерфейса: модалки, тосты, скелетоны, стриминг текста, состояния агента. Смотрите живой пример и забираете паттерн в продукт — особенно полезно, когда AI-чат должен ощущаться «живым», а не дёрганым.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://beam.jakubantalik.com/" target="_blank" rel="noopener noreferrer" data-name="border beam animated border component">
+          <div>
+            <p class="name">Beam</p>
+            <p class="host">beam.jakubantalik.com</p>
+          </div>
+          <p class="desc">Готовый компонент бегущей подсветки по рамке карточки или кнопки. Ставится как `border-beam`, крутится playground по цвету и силе эффекта. Короткий способ сделать CTA или контейнер агента заметнее без самописного CSS.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://metal.jakubantalik.com/" target="_blank" rel="noopener noreferrer" data-name="metal-fx liquid metal border">
+          <div>
+            <p class="name">Metal</p>
+            <p class="host">metal.jakubantalik.com</p>
+          </div>
+          <p class="desc">Жидкий металлический бордер: хром, золото, радуга. Оборачиваете кнопку или бейдж в `MetalFx` и получаете премиальный блик. Хорошо для Pro-кнопок и акцентов, где обычная обводка выглядит плоско.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://orbs.jakubantalik.com/" target="_blank" rel="noopener noreferrer" data-name="thinking orbs agent states">
+          <div>
+            <p class="name">Orbs</p>
+            <p class="host">orbs.jakubantalik.com</p>
+          </div>
+          <p class="desc">Анимированные «думающие» сферы для статусов агента: listening, searching, working. Есть React, SwiftUI и React Native. Заменяет спиннер там, где нужно показать, что модель занята, не перекрывая весь экран.</p>
+          <span class="go">Открыть</span>
+        </a>
+      </section>
+
+      <section class="group" data-cat="agent">
+        <h2>Интерфейсы агентов</h2>
+        <a class="tool" href="https://www.aicss.dev/" target="_blank" rel="noopener noreferrer" data-name="aicss agent chat thinking streaming citations">
+          <div>
+            <p class="name">AICSS</p>
+            <p class="host">aicss.dev</p>
+          </div>
+          <p class="desc">Copy-paste компоненты для чата с агентом: thinking, стриминг текста, тул-коллы, цитаты, таблицы, approval. Код на React, Vue и Svelte. Если собираете свой Cursor-подобный UI, здесь уже нарисованы нужные состояния.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://www.beautifului.dev/" target="_blank" rel="noopener noreferrer" data-name="beautiful ui ai primitives chat prompt bar">
+          <div>
+            <p class="name">Beautiful UI</p>
+            <p class="host">beautifului.dev</p>
+          </div>
+          <p class="desc">Набор примитивов для AI-native продуктов: лоадеры, reasoning, prompt bar, diff-таблицы, карточки рекомендаций, сайдбар чата. Смотрите живые примеры и переносите паттерны в свой интерфейс, а не изобретаете агентный UX с нуля.</p>
+          <span class="go">Открыть</span>
+        </a>
+        <a class="tool" href="https://www.agentation.com/" target="_blank" rel="noopener noreferrer" data-name="agentation annotate ui feedback mcp cursor">
+          <div>
+            <p class="name">Agentation</p>
+            <p class="host">agentation.com</p>
+          </div>
+          <p class="desc">Кликнули по элементу на странице — получили аннотацию с селектором, путём в коде и вашим комментарием. Вставляете в Cursor или Claude, агент чинит точно тот блок, а не «синюю кнопку слева». Есть MCP, чтобы обойтись без копипаста.</p>
+          <span class="go">Открыть</span>
+        </a>
+      </section>
+      <p class="empty">Ничего не нашлось. Сбросьте фильтр или поищите другое слово.</p>
+    </main>
+
+    <footer>16 сервисов · открываются в новой вкладке · страница для внутренней работы команды</footer>
+  </div>
+  <script>
+    const q = document.getElementById("q");
+    const chips = [...document.querySelectorAll("[data-filter]")];
+    const tools = [...document.querySelectorAll(".tool")];
+    const groups = [...document.querySelectorAll(".group")];
+    let cat = "all";
+
+    function apply() {
+      const term = q.value.trim().toLowerCase();
+      let visible = 0;
+      tools.forEach((el) => {
+        const inCat = cat === "all" || el.closest(".group").dataset.cat === cat;
+        const hay = (el.dataset.name + " " + el.textContent).toLowerCase();
+        const show = inCat && (!term || hay.includes(term));
+        el.hidden = !show;
+        if (show) visible += 1;
+      });
+      groups.forEach((g) => {
+        const any = [...g.querySelectorAll(".tool")].some((t) => !t.hidden);
+        g.style.display = any ? "" : "none";
+      });
+      document.body.classList.toggle("is-empty", visible === 0);
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        cat = chip.dataset.filter;
+        chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+        apply();
+      });
+    });
+    q.addEventListener("input", apply);
+  </script>
+</body>
+</html>
