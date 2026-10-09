@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Рекомендации врачей — динамика по месяцам</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --bg:#f4f5f7; --card:#fff; --text:#1a1d23; --muted:#5c6578; --border:#e2e6ee; --accent:#2563eb; --sep:#b45309; }
+    * { box-sizing:border-box }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5 }
+    header { background:#1e3a5f; color:#fff; padding:40px 20px }
+    .wrap { max-width:1100px; margin:0 auto; padding:24px 20px 64px }
+    header .wrap { padding:0 }
+    h1 { margin:0 0 8px; font-size:1.7rem }
+    header p { margin:0; opacity:.9; max-width:720px }
+    .note { background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; padding:14px 16px; margin:20px 0; color:#9a3412 }
+    .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); margin:20px 0 }
+    .stat { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; text-align:center }
+    .stat .v { font-size:1.6rem; font-weight:700; color:var(--accent) }
+    .stat .l { font-size:.8rem; color:var(--muted) }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px }
+    .card h2 { margin:0 0 6px; font-size:1.15rem }
+    .sub { color:var(--muted); font-size:.85rem; margin:0 0 14px }
+    .chart { height:300px }
+    .chart.tall { height:360px }
+    table { width:100%; border-collapse:collapse; font-size:.9rem }
+    th,td { padding:9px 10px; border-bottom:1px solid var(--border); text-align:left }
+    th { color:var(--muted); font-size:.75rem; text-transform:uppercase }
+    td.num { text-align:right; font-variant-numeric:tabular-nums; font-weight:600 }
+    tr.hl { background:#fff7ed }
+    .bar-row { margin-bottom:10px }
+    .bar-label { display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:4px }
+    .bar-track { height:8px; background:var(--border); border-radius:4px }
+    .bar-fill { height:100%; background:var(--accent); border-radius:4px }
+    .two { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px }
+    footer { color:var(--muted); font-size:.8rem; margin-top:32px; padding-top:16px; border-top:1px solid var(--border) }
+    nav a { color:#93c5fd; margin-right:14px; font-size:.9rem }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav><a href="index.html">Все отчёты</a></nav>
+    <h1>Динамика рекомендаций по месяцам</h1>
+    <p>История консультаций 2022 — апр 2026 плюс новая выгрузка RU-тарифов за сентябрь 2026. Сравнение идёт по консультациям, не по отдельным строкам советов.</p>
+  </div>
+</header>
+<div class="wrap">
+  <div class="note">
+    <strong>Как читать.</strong> В старой выгрузке одна консультация дробилась на много коротких строк. Здесь все тексты одной консультации склеены, поэтому доли Bioniq / Solgar / Омега сопоставимы с сентябрём. Январь 2022 — разовый залив (5 479 консультаций), на графиках с 2023 года он скрыт. Между апрелем и сентябрём 2026 в данных разрыв: мая–августа нет.
+  </div>
+
+  <div class="grid">
+    <div class="stat"><div class="v">188</div><div class="l">Консультаций · сент 2026</div></div>
+    <div class="stat"><div class="v">100</div><div class="l">Апрель 2026 (последний старый месяц)</div></div>
+    <div class="stat"><div class="v">148</div><div class="l">Сентябрь 2025 (год к году)</div></div>
+    <div class="stat"><div class="v">98.4%</div><div class="l">Доля консультаций с Bioniq · сент 2026</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Объём консультаций по месяцам</h2>
+    <p class="sub">С 2023-01. Оранжевая точка — сентябрь 2026 (новая выгрузка, только RU тарифы).</p>
+    <div class="chart"><canvas id="vol"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>Доля консультаций, где упомянут бренд / вещество</h2>
+    <p class="sub">Процент от консультаций месяца. Так видно не «сколько строк», а как часто врачи вообще советуют продукт.</p>
+    <div class="chart tall"><canvas id="shares"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>Сентябрь к сентябрю</h2>
+    <p class="sub">Одинаковый месяц в разные годы. 2026 — новая RU-выгрузка.</p>
+    <table>
+      <thead><tr><th>Месяц</th><th>Консультаций</th><th>Bioniq</th><th>Solgar</th><th>Омега-3</th><th>Витамин D</th></tr></thead>
+      <tbody><tr><td>2023-09</td><td class='num'>82</td><td class='num'>12 (14.6%)</td><td class='num'>0 (0.0%)</td><td class='num'>22 (26.8%)</td><td class='num'>0 (0.0%)</td></tr><tr><td>2024-09</td><td class='num'>80</td><td class='num'>3 (3.8%)</td><td class='num'>4 (5.0%)</td><td class='num'>42 (52.5%)</td><td class='num'>7 (8.8%)</td></tr><tr><td>2025-09</td><td class='num'>148</td><td class='num'>44 (29.7%)</td><td class='num'>5 (3.4%)</td><td class='num'>91 (61.5%)</td><td class='num'>22 (14.9%)</td></tr><tr><td>2026-09</td><td class='num'>188</td><td class='num'>185 (98.4%)</td><td class='num'>0 (0.0%)</td><td class='num'>160 (85.1%)</td><td class='num'>169 (89.9%)</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Сентябрь 2026 · RU тарифы</h2>
+    <p class="sub">188 консультаций, 1–30 сентября, три врача. Текст длиннее, чем в старых коротких советах — поэтому доли типов выше.</p>
+    <div class="two">
+      <div>
+        <h3>Врачи</h3>
+        <table><tbody><tr><td>Дарья Диброва</td><td class='num'>80</td></tr><tr><td>Анастасия Гальянова</td><td class='num'>79</td></tr><tr><td>Вероника Ковалева</td><td class='num'>29</td></tr></tbody></table>
+        <h3 style="margin-top:20px">Продукты Essential и препараты</h3>
+        <table><thead><tr><th>Название</th><th>Конс.</th><th>Доля</th></tr></thead><tbody><tr><td>Bioniq Essential D3+K2</td><td class='num'>169</td><td class='num'>90%</td></tr><tr><td>Bioniq Essential Omega-3</td><td class='num'>71</td><td class='num'>38%</td></tr><tr><td>Bioniq Men's Health</td><td class='num'>25</td><td class='num'>13%</td></tr><tr><td>Methylfolate / метилфолат</td><td class='num'>20</td><td class='num'>11%</td></tr><tr><td>Hemaplex</td><td class='num'>12</td><td class='num'>6%</td></tr><tr><td>Totema / Тотема</td><td class='num'>12</td><td class='num'>6%</td></tr><tr><td>Sorbifer</td><td class='num'>10</td><td class='num'>5%</td></tr><tr><td>Bioniq Hair Skin Nails</td><td class='num'>1</td><td class='num'>1%</td></tr></tbody></table>
+      </div>
+      <div>
+        <h3>Типы рекомендаций</h3>
+        <div class="bar-row"><div class="bar-label"><span>Собственный продукт Bioniq</span><span><strong>185</strong> (98%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Ссылки / магазины</span><span><strong>184</strong> (98%)</span></div><div class="bar-track"><div class="bar-fill" style="width:99.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>БАД / витамины / добавки</span><span><strong>183</strong> (97%)</span></div><div class="bar-track"><div class="bar-fill" style="width:98.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Диета / продукты питания</span><span><strong>169</strong> (90%)</span></div><div class="bar-track"><div class="bar-fill" style="width:91.4%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>КБЖУ / калорийность</span><span><strong>142</strong> (76%)</span></div><div class="bar-track"><div class="bar-fill" style="width:76.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Анализы / обследования</span><span><strong>139</strong> (74%)</span></div><div class="bar-track"><div class="bar-fill" style="width:75.1%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Вода / гидратация</span><span><strong>120</strong> (64%)</span></div><div class="bar-track"><div class="bar-fill" style="width:64.9%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Физическая активность</span><span><strong>119</strong> (63%)</span></div><div class="bar-track"><div class="bar-fill" style="width:64.3%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Медикаменты / препараты</span><span><strong>112</strong> (60%)</span></div><div class="bar-track"><div class="bar-fill" style="width:60.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Инструментальная диагностика</span><span><strong>81</strong> (43%)</span></div><div class="bar-track"><div class="bar-fill" style="width:43.8%"></div></div></div>
+      </div>
+    </div>
+    <h3 style="margin-top:20px">Бренды и вещества в сентябре</h3>
+    <table><thead><tr><th>Название</th><th>Конс.</th><th>Доля</th></tr></thead><tbody><tr><td>Bioniq</td><td class='num'>185</td><td class='num'>98%</td></tr><tr><td>Vitamin D (generic)</td><td class='num'>169</td><td class='num'>90%</td></tr><tr><td>Omega-3 (generic)</td><td class='num'>160</td><td class='num'>85%</td></tr><tr><td>Magnesium (generic)</td><td class='num'>63</td><td class='num'>34%</td></tr><tr><td>Zinc (generic)</td><td class='num'>40</td><td class='num'>21%</td></tr><tr><td>Iron / Железо supplements</td><td class='num'>16</td><td class='num'>9%</td></tr><tr><td>CoQ10 / Коэнзим Q10</td><td class='num'>5</td><td class='num'>3%</td></tr><tr><td>Prenatal vitamins (generic)</td><td class='num'>4</td><td class='num'>2%</td></tr><tr><td>Statins mention</td><td class='num'>4</td><td class='num'>2%</td></tr><tr><td>Levothyroxine / L-тироксин</td><td class='num'>3</td><td class='num'>2%</td></tr><tr><td>Ozempic / семаглутид</td><td class='num'>3</td><td class='num'>2%</td></tr><tr><td>Berberine / Берберин</td><td class='num'>3</td><td class='num'>2%</td></tr></tbody></table>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>Направления к врачам · сент 2026</h2>
+      <div class="bar-row"><div class="bar-label"><span>Кардиолог</span><span><strong>26</strong> (14%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Терапевт</span><span><strong>25</strong> (13%)</span></div><div class="bar-track"><div class="bar-fill" style="width:96.2%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Гастроэнтеролог</span><span><strong>15</strong> (8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:57.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Эндокринолог</span><span><strong>13</strong> (7%)</span></div><div class="bar-track"><div class="bar-fill" style="width:50.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Гинеколог</span><span><strong>11</strong> (6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:42.3%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Уролог</span><span><strong>10</strong> (5%)</span></div><div class="bar-track"><div class="bar-fill" style="width:38.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Невролог</span><span><strong>2</strong> (1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:7.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Хирург</span><span><strong>2</strong> (1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:7.7%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Иммунолог</span><span><strong>1</strong> (1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:3.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>ЛОР / отоларинголог</span><span><strong>1</strong> (1%)</span></div><div class="bar-track"><div class="bar-fill" style="width:3.8%"></div></div></div>
+    </div>
+    <div class="card">
+      <h2>Анализы · сент 2026</h2>
+      <div class="bar-row"><div class="bar-label"><span>Печёночные пробы</span><span><strong>129</strong> (69%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Липидный профиль</span><span><strong>111</strong> (59%)</span></div><div class="bar-track"><div class="bar-fill" style="width:86.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Цинк / медь / микроэлементы</span><span><strong>89</strong> (47%)</span></div><div class="bar-track"><div class="bar-fill" style="width:69.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>УЗИ</span><span><strong>80</strong> (43%)</span></div><div class="bar-track"><div class="bar-fill" style="width:62.0%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>ЭКГ</span><span><strong>38</strong> (20%)</span></div><div class="bar-track"><div class="bar-fill" style="width:29.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Ферритин</span><span><strong>32</strong> (17%)</span></div><div class="bar-track"><div class="bar-fill" style="width:24.8%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Фолат</span><span><strong>29</strong> (15%)</span></div><div class="bar-track"><div class="bar-fill" style="width:22.5%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Общий анализ крови</span><span><strong>21</strong> (11%)</span></div><div class="bar-track"><div class="bar-fill" style="width:16.3%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>Гомоцистеин</span><span><strong>15</strong> (8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:11.6%"></div></div></div>
+<div class="bar-row"><div class="bar-label"><span>ТТГ / щитовидка</span><span><strong>12</strong> (6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:9.3%"></div></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Объём с 2024 года</h2>
+    <p class="sub">Сентябрь 2026 выделен. Это консультации, не строки советов.</p>
+    <table>
+      <thead><tr><th>Месяц</th><th>Консультаций</th></tr></thead>
+      <tbody><tr><td>2024-01</td><td class='num'>148</td></tr><tr><td>2024-02</td><td class='num'>192</td></tr><tr><td>2024-03</td><td class='num'>130</td></tr><tr><td>2024-04</td><td class='num'>78</td></tr><tr><td>2024-05</td><td class='num'>103</td></tr><tr><td>2024-06</td><td class='num'>114</td></tr><tr><td>2024-07</td><td class='num'>91</td></tr><tr><td>2024-08</td><td class='num'>90</td></tr><tr><td>2024-09</td><td class='num'>80</td></tr><tr><td>2024-10</td><td class='num'>89</td></tr><tr><td>2024-11</td><td class='num'>79</td></tr><tr><td>2024-12</td><td class='num'>88</td></tr><tr><td>2025-01</td><td class='num'>77</td></tr><tr><td>2025-02</td><td class='num'>121</td></tr><tr><td>2025-03</td><td class='num'>156</td></tr><tr><td>2025-04</td><td class='num'>134</td></tr><tr><td>2025-05</td><td class='num'>114</td></tr><tr><td>2025-06</td><td class='num'>143</td></tr><tr><td>2025-07</td><td class='num'>146</td></tr><tr><td>2025-08</td><td class='num'>102</td></tr><tr><td>2025-09</td><td class='num'>148</td></tr><tr><td>2025-10</td><td class='num'>161</td></tr><tr><td>2025-11</td><td class='num'>135</td></tr><tr><td>2025-12</td><td class='num'>215</td></tr><tr><td>2026-01</td><td class='num'>150</td></tr><tr><td>2026-02</td><td class='num'>137</td></tr><tr><td>2026-03</td><td class='num'>146</td></tr><tr><td>2026-04</td><td class='num'>100</td></tr><tr class="hl"><td>2026-09</td><td class='num'>188</td></tr></tbody>
+    </table>
+  </div>
+
+  <footer>
+    Источники: Result_22.xlsx (консультации до 29.04.2026) и «Рекомендации сентябрь (RU тарифы).xlsx».
+    Единица сравнения — уникальная консультация. Упоминания считаются, если ключ встретился в тексте хотя бы раз.
+  </footer>
+</div>
+<script>
+const D = {"months": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-09"], "counts": [114, 129, 134, 151, 159, 100, 156, 87, 82, 189, 145, 204, 148, 192, 130, 78, 103, 114, 91, 90, 80, 89, 79, 88, 77, 121, 156, 134, 114, 143, 146, 102, 148, 161, 135, 215, 150, 137, 146, 100, 188], "bioniq": [8.8, 12.4, 23.9, 22.5, 18.9, 9.0, 14.1, 13.8, 14.6, 22.8, 15.9, 22.5, 2.7, 3.1, 4.6, 7.7, 13.6, 3.5, 7.7, 7.8, 3.8, 4.5, 3.8, 11.4, 2.6, 3.3, 16.0, 26.1, 21.9, 21.7, 32.9, 20.6, 29.7, 23.6, 28.9, 32.1, 34.0, 35.0, 24.7, 31.0, 98.4], "solgar": [0.0, 0.0, 0.0, 0.7, 0.6, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 0.0, 1.4, 0.0, 3.1, 5.1, 3.9, 4.4, 2.2, 3.3, 5.0, 12.4, 11.4, 3.4, 1.3, 0.0, 0.6, 0.0, 3.5, 4.2, 6.8, 5.9, 3.4, 9.3, 5.9, 11.6, 21.3, 13.9, 17.8, 23.0, 0.0], "omega": [16.7, 7.8, 16.4, 17.9, 21.4, 9.0, 16.7, 25.3, 26.8, 16.4, 14.5, 8.8, 14.9, 35.4, 75.4, 80.8, 68.0, 46.5, 57.1, 68.9, 52.5, 71.9, 64.6, 65.9, 61.0, 47.9, 57.1, 59.7, 74.6, 62.9, 67.8, 77.5, 61.5, 70.8, 69.6, 69.3, 74.0, 74.5, 52.1, 45.0, 85.1], "vitd": [4.4, 1.6, 1.5, 0.7, 1.3, 3.0, 3.8, 0.0, 0.0, 0.0, 19.3, 10.8, 20.3, 29.2, 25.4, 15.4, 16.5, 7.9, 4.4, 6.7, 8.8, 12.4, 8.9, 3.4, 10.4, 5.8, 24.4, 14.2, 21.9, 18.2, 15.8, 18.6, 14.9, 14.9, 12.6, 16.3, 13.3, 5.8, 9.6, 6.0, 89.9], "iherb": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.1, 1.4, 2.9, 0.0, 0.6, 0.0, 0.0, 0.0, 0.0, 2.1, 0.0, 0.0]};
+const highlight = D.months.map(m => m === '2026-09' ? '#b45309' : '#2563eb');
+new Chart(document.getElementById('vol'), {
+  type: 'bar',
+  data: {
+    labels: D.months,
+    datasets: [{ data: D.counts, backgroundColor: highlight, label: 'Консультации' }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, title: { display: true, text: 'Консультации' } } }
+  }
+});
+new Chart(document.getElementById('shares'), {
+  type: 'line',
+  data: {
+    labels: D.months,
+    datasets: [
+      { label: 'Bioniq', data: D.bioniq, borderColor: '#059669', tension: .25 },
+      { label: 'Solgar', data: D.solgar, borderColor: '#7c3aed', tension: .25 },
+      { label: 'Омега-3', data: D.omega, borderColor: '#2563eb', tension: .25 },
+      { label: 'Витамин D', data: D.vitd, borderColor: '#d97706', tension: .25 },
+      { label: 'iHerb', data: D.iherb, borderColor: '#64748b', tension: .25 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom' } },
+    scales: { y: { beginAtZero: true, title: { display: true, text: '% консультаций месяца' } } }
+  }
+});
+</script>
+</body>
+</html>
